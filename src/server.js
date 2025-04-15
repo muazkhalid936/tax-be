@@ -6,7 +6,7 @@ const { REMOTE_CLIENT_URL, PORT } = require("./config/dotenv");
 const app = express();
 
 var corsOptions = {
-	origin: REMOTE_CLIENT_URL || "http://localhost:3000",
+	origin: true,
 	optionsSuccessStatus: 200,
 	credentials: true,
 };
