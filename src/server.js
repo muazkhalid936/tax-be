@@ -1,28 +1,44 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const { REMOTE_CLIENT_URL, PORT } = require("./config/dotenv");
+const { PORT } = require("./config/dotenv");
 
 const app = express();
 
-var corsOptions = {
-	origin: true,
-	optionsSuccessStatus: 200,
-	credentials: true,
+// CORS configuration
+const allowedOrigins = [
+  "http://localhost:3000", // Your local development
+  "https://your-production-frontend.com" // Your production frontend
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions)); // Enable preflight for all routes
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Connect to the database
 connectDB();
 
-app.get("/", (_, res) => res.json({ message: "Welcome to Textilia backend." }));
-
 // Routes
 const routes = require("./routes");
 app.use("/api/v1", routes);
 
-// Use the port from environment variables or default to 5000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
