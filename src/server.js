@@ -8,7 +8,7 @@ const app = express();
 // CORS configuration
 const allowedOrigins = [
   "http://localhost:3000", // Your local development
-  "https://your-production-frontend.com" // Your production frontend
+  "https://taxtilla.vercel.app/" // Your production frontend
 ];
 
 const corsOptions = {
